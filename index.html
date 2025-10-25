@@ -54,7 +54,7 @@
         /* Hero Section - Full Screen */
         .hero {
             height: 100vh;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: var(--primary-color);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -74,7 +74,7 @@
             right: 0;
             bottom: 0;
             background: url('Prince-Paint-Repair.png') center/cover no-repeat;
-            opacity: 0.15;
+            opacity: 0.2;
             z-index: 0;
         }
 
@@ -576,50 +576,8 @@
     <!-- Reviews Section -->
     <section id="reviews">
         <h2>What Our Customers Say</h2>
-        <div class="reviews-container">
-            <div class="review-card">
-                <div class="review-header">
-                    <span class="review-name">Customer 1</span>
-                    <span class="stars">★★★★★</span>
-                </div>
-                <div class="review-body"></div>
-            </div>
-            <div class="review-card">
-                <div class="review-header">
-                    <span class="review-name">Customer 2</span>
-                    <span class="stars">★★★★★</span>
-                </div>
-                <div class="review-body"></div>
-            </div>
-            <div class="review-card">
-                <div class="review-header">
-                    <span class="review-name">Customer 3</span>
-                    <span class="stars">★★★★★</span>
-                </div>
-                <div class="review-body"></div>
-            </div>
-            <div class="review-card">
-                <div class="review-header">
-                    <span class="review-name">Customer 4</span>
-                    <span class="stars">★★★★★</span>
-                </div>
-                <div class="review-body"></div>
-            </div>
-            <div class="review-card">
-                <div class="review-header">
-                    <span class="review-name">Customer 5</span>
-                    <span class="stars">★★★★★</span>
-                </div>
-                <div class="review-body"></div>
-            </div>
-            <div class="review-card">
-                <div class="review-header">
-                    <span class="review-name">Customer 6</span>
-                    <span class="stars">★★★★★</span>
-                </div>
-                <div class="review-body"></div>
-            </div>
-        </div>
+        <div class="reviews-container" id="reviewsContainer"></div>
+        <button class="show-more-btn hidden" id="showMoreBtn"></button>
     </section>
 
     <!-- Location & Hours Section -->
@@ -717,6 +675,92 @@
     </footer>
 
     <script>
+        // Reviews Array - Add your reviews here
+        const reviews = [
+    {
+        "name": "Jared Baker",
+        "rating": 5,
+        "body": "A satisfied Prince Paint Repair customer told me about these guys. so i called and from the moment I called to the completed job they treated me like a valued customer and friend. We talked about options for my 2005 Toyota Tundra 400,000 mile battle wagon. We came up with a game plan to paint the front hood, wrap the top, buff the entire truck, reattach and weld the driver door bracket and install a new updated sexy grill and headlights. We added a few details and Taylor (Owner and now friend of mine) did exactly what he said he and his team would do and finished it on time and on budget!!!! Wait a minute…..on time and on budget. Yes, these guys are solid, honest, family men that deliver a great service and product to our community. I have lived in St. George 25 years and have been to the other big name auto body shops “Dixie and Troy’s” and I will always come to Prince and choose Prince because of how I was treated not only by Taylor but by his entire staff. Head and shoulder above the others and the do it for a fair price! Enjoy the transformation that took 6 days. Thanks again Prince Paint Repair team!!!!"
+    },
+    {
+        "name": "Jordan Harns",
+        "rating": 5,
+        "body": "Taylor at Prince Paint has always taken care of my body work needs on my vehicles. he has done 2 different repairs for me on two of my vehicles. Both came out exceptionally well and at a very reasonable price. I highly recommend Prince Paint Repair for any body work or paint needs. Services Painting, Body & Trim Price assessment Great price"
+    },
+    {
+        "name": "wendy Wilde",
+        "rating": 5,
+        "body": "Taylor did such an amazing job on my Toyota Camry! My car looks better after he was finished with it, than when it went in. It looks like it came off of the car lot when I bought my car. Taylor went above and beyond. The quality of work is worth it and much more. I am so grateful to Taylor for his honesty and for his integrity as well. I definitely trust him and would go back to him to do work on my car. I would most definitely refer others to go to him."
+    },
+    {
+        "name": "Koby Holyoak",
+        "rating": 5,
+        "body": "Taylor did a phenomenal job on our Nissan rogue. He worked us in and was able to finish us up right in the middle of the holidays. His price was more than fair considering his quality of work. Would recommend to anyone looking for small or large repairs!"
+    },
+    {
+        "name": "Josh Jarvis",
+        "rating": 5,
+        "body": "Taylor did a great job in helping me with some touch up paint on my car. I would highly recommend going to his shop. Thanks for helping out!"
+    },
+    {
+        "name": "Jan Prisbrey",
+        "rating": 5,
+        "body": "Taylor did an awesome job on a repair and oxidation problem with my Honda Civic. He is honest, hardworking and makes sure his customers are satisfied. I will recommend him to friends and family!! Thanks, Taylor!"
+    },
+    {
+        "name": "C A",
+        "rating": 5,
+        "body": "WE HAD P.P.R. FIX THE BUMP ON MY CAR. THEY WERE VERY FRIENDLY AND THE JOB WAS DONE RIGHT."
+    }
+];
+
+        let reviewsDisplayed = 0;
+        const reviewsPerPage = 6;
+
+        function displayReviews(startIndex, count) {
+            const container = document.getElementById('reviewsContainer');
+            const endIndex = Math.min(startIndex + count, reviews.length);
+            
+            for (let i = startIndex; i < endIndex; i++) {
+                const review = reviews[i];
+                const stars = '★'.repeat(review.rating);
+                
+                const reviewCard = document.createElement('div');
+                reviewCard.className = 'review-card';
+                reviewCard.innerHTML = `
+                    <div class="review-header">
+                        <span class="review-name">${review.name}</span>
+                        <span class="stars">${stars}</span>
+                    </div>
+                    ${review.body ? `<div class="review-body">${review.body}</div>` : ''}
+                `;
+                container.appendChild(reviewCard);
+            }
+            
+            reviewsDisplayed = endIndex;
+            updateShowMoreButton();
+        }
+
+        function updateShowMoreButton() {
+            const btn = document.getElementById('showMoreBtn');
+            const remaining = reviews.length - reviewsDisplayed;
+            
+            if (remaining > 0) {
+                btn.classList.remove('hidden');
+                const toShow = Math.min(remaining, reviewsPerPage);
+                btn.textContent = `Show ${toShow} More ${toShow === 1 ? 'Review' : 'Reviews'} (Total ${remaining})`;
+            } else {
+                btn.classList.add('hidden');
+            }
+        }
+
+        document.getElementById('showMoreBtn').addEventListener('click', function() {
+            displayReviews(reviewsDisplayed, reviewsPerPage);
+        });
+
+        // Initial display
+        displayReviews(0, reviewsPerPage);
+
         // Contact Form Handling
         document.getElementById('contactForm').addEventListener('submit', async function(e) {
             e.preventDefault();
